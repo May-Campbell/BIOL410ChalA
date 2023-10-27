@@ -1,0 +1,113 @@
+# May Campbell BIOL410 Final Project (A)
+
+#install.packages("seqinr")
+#install.packages("stringr")
+#library(seqinr) #Functions used in seqinr: read.fasta and write.fasta
+#library(stringr) #Functions used in stringr: str_extract_all
+
+#Make hash to get AA      
+A_A = list()    
+A_A[["ttt"]]= "F"   
+A_A[["ttc"]]= "F" 
+A_A[["tta"]]= "L" 
+A_A[["ttg"]]= "L" 
+
+A_A[["ctt"]]= "L" 
+A_A[["cta"]]= "L" 
+A_A[["ctg"]]= "L" 
+A_A[["ctc"]]= "L" 
+
+A_A[["att"]]= "I" 
+A_A[["atc"]]= "I" 
+A_A[["ata"]]= "I" 
+A_A[["atg"]]= "M" 
+
+A_A[["gtt"]]= "V" 
+A_A[["gtc"]]= "V" 
+A_A[["gta"]]= "V" 
+A_A[["gtg"]]= "V"
+
+A_A[["tct"]]= "S" 
+A_A[["tcc"]]= "S" 
+A_A[["tca"]]= "S" 
+A_A[["tcg"]]= "S"
+
+A_A[["cct"]]= "P" 
+A_A[["ccc"]]= "P" 
+A_A[["cca"]]= "P" 
+A_A[["ccg"]]= "P" 
+
+A_A[["act"]]= "T" 
+A_A[["acc"]]= "T" 
+A_A[["aca"]]= "T" 
+A_A[["acg"]]= "T"
+
+A_A[["gct"]]= "A" 
+A_A[["gcc"]]= "A" 
+A_A[["gca"]]= "A" 
+A_A[["gcg"]]= "A"
+
+A_A[["tat"]]= "Y" 
+A_A[["tac"]]= "Y" 
+A_A[["taa"]]= "*" 
+A_A[["tag"]]= "*" 
+
+A_A[["cat"]]= "H" 
+A_A[["cac"]]= "H" 
+A_A[["caa"]]= "Q" 
+A_A[["cag"]]= "Q" 
+
+A_A[["aat"]]= "N" 
+A_A[["aac"]]= "N" 
+A_A[["aaa"]]= "K" 
+A_A[["aag"]]= "K" 
+
+A_A[["gat"]]= "D" 
+A_A[["gac"]]= "D" 
+A_A[["gaa"]]= "E" 
+A_A[["gag"]]= "E" 
+
+A_A[["tgt"]]= "C" 
+A_A[["tgc"]]= "C" 
+A_A[["tga"]]= "*" 
+A_A[["tgg"]]= "W" 
+
+A_A[["cgt"]]= "R" 
+A_A[["cgc"]]= "R" 
+A_A[["cga"]]= "R" 
+A_A[["cgg"]]= "R" 
+
+A_A[["agt"]]= "S" 
+A_A[["agc"]]= "S" 
+A_A[["aga"]]= "R" 
+A_A[["agg"]]= "R"
+
+A_A[["ggt"]]= "G" 
+A_A[["ggc"]]= "G" 
+A_A[["gga"]]= "G" 
+A_A[["ggg"]]= "G" 
+
+#Read fasta file as a string of characters
+Dan= read.fasta(file = "gene.fna", seqtype = c("DNA"), 
+                forceDNAtolower = T, whole.header = T, as.string = T)
+#Extract the names of each sequence
+Fan= names(Dan)
+#Read the DNA seq in groups of 3
+codons <- str_extract_all(Dan, "[a-z]{3}")
+#Make a file to put AA seq
+file.create("Campbell_Out.faa")
+#Loop through each seq in the file
+for (i in 1:length(Dan)) {
+  #Make a vector to store the AA seq
+  AAs= vector(mode = "character")
+    # Loop through individual codons in the seq
+    for (j in 1:length(codons[[i]])) {
+      #Translate them to AA 
+      A= A_A[[codons[[i]][j]]]
+      #Add the new AA to a list of all the AA from the seq
+      AAs= append(AAs, A)
+    }
+    #Write name and AA seq to file, make new file if first seq #error in this line
+      write.fasta(sequences =AAs, names = Fan[i], file.out = "Campbell_Out.faa", open = "a")
+}
+    
